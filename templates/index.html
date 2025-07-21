@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Breast Cancer Prediction</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            color: white;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #4fd1c7;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #4fd1c7;
+        }
+
+        .github-link {
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .page {
+            display: none;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 4rem 0;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero .highlight {
+            color: #ff6b6b;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: #888;
+            margin-bottom: 3rem;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            color: #4fd1c7;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card p {
+            color: #ccc;
+            line-height: 1.6;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .content-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .content-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #4fd1c7;
+        }
+
+        .content-card p {
+            color: #ccc;
+            line-height: 1.6;
+        }
+
+        .form-container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 3rem;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            max-width: 900px;
+            margin: 2rem auto;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            margin-bottom: 0.8rem;
+            color: #e0e0e0;
+            font-size: 0.95rem;
+            line-height: 1.4;
+            font-weight: 500;
+        }
+
+        .unit-label {
+            color: #4fd1c7;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-left: 0.5rem;
+        }
+
+        .form-group input {
+            padding: 1rem;
+            border: none;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            font-size: 1rem;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #4fd1c7;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .form-group input::placeholder {
+            color: #aaa;
+        }
+
+        .form-group input.valid {
+            border-color: #2ecc71 !important;
+        }
+
+        .form-group input.invalid {
+            border-color: #e74c3c !important;
+        }
+
+        .info-box {
+            background: rgba(79, 209, 199, 0.1);
+            border: 1px solid rgba(79, 209, 199, 0.3);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .info-box h4 {
+            color: #4fd1c7;
+            margin-bottom: 0.8rem;
+            font-size: 1.1rem;
+        }
+
+        .info-box p {
+            color: #ccc;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .form-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 1rem 2.5rem;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #c0392b, #a93226);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(231, 76, 60, 0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #7f8c8d, #6c7b7d);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, #6c7b7d, #5d6d6e);
+            transform: translateY(-2px);
+        }
+
+        .prediction-result {
+            display: none;
+            background: rgba(45, 62, 80, 0.95);
+            border: 2px solid #4fd1c7;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-top: 2rem;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            animation: fadeInUp 0.5s ease-out;
+        }
+
+        .prediction-result.show {
+            display: block;
+        }
+
+        .prediction-result h3 {
+            color: white;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .prediction-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: 1rem 0;
+            text-transform: uppercase;
+        }
+
+        .prediction-value.benign {
+            color: #2ecc71;
+        }
+
+        .prediction-value.malignant {
+            color: #e74c3c;
+        }
+
+        .confidence-text {
+            font-size: 1.3rem;
+            color: white;
+            margin: 1rem 0;
+        }
+
+        .disclaimer {
+            color: #95a5a6;
+            font-style: italic;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .nav-button {
+            background: #4fd1c7;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 0 0.5rem;
+            transition: background 0.3s;
+        }
+
+        .nav-button:hover {
+            background: #3fb8ae;
+        }
+
+        .nav-button.active {
+            background: #ff6b6b;
+        }
+
+        .navigation {
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-links {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-container {
+                padding: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">🔬 NOYB</div>
+        <ul class="nav-links">
+            <li><a href="#" onclick="showPage('home')">Home</a></li>
+            <li><a href="#" onclick="showPage('docs')">Docs</a></li>
+            <li><a href="#" onclick="showPage('tools')">Tools</a></li>
+        </ul>
+        <a href="#" class="github-link">Github 🔗</a>
+    </nav>
+
+    <!-- Page 1: Home/Landing -->
+    <div id="home" class="page active">
+        <div class="hero">
+            <h1>Breast Cancer <span class="highlight">Prediction</span></h1>
+            <p>Advance Artificial Intelligence analysis for breast cancer</p>
+        </div>
+
+        <div class="features">
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>Accurate Analysis</h3>
+                <p>Using advanced AI algorithms to detect potential breast cancer with a high level of accuracy, helping medical personnel make faster and more precise decisions.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🩺</div>
+                <h3>Medical Data Required</h3>
+                <p>This application is designed to analyze medical data such as biopsy results, cell size, and tumor characteristics to provide more accurate predictions.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💝</div>
+                <h3>Health Insights</h3>
+                <p>Provides useful health insights from risk classification analysis results from medical diagnosis results.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page 2: Documentation/About -->
+    <div id="docs" class="page">
+        <div class="hero">
+            <h1>Breast Cancer <span class="highlight">Prediction</span></h1>
+            <p>All Information About Project</p>
+        </div>
+
+        <div class="content-card">
+            <h3>Overview</h3>
+            <p>Breast cancer is the leading cause of death for women and is difficult to detect in its early stages due to minimal symptoms. Early detection is crucial to increase the chances of cure, and technology-based approaches such as AI and machine learning are increasingly being used to support automated diagnosis.</p>
+        </div>
+
+        <div class="content-grid">
+            <div class="content-card">
+                <h3>Problems</h3>
+                <p>Early detection of breast cancer still faces challenges due to the difficulty of recognizing early symptoms and the limitations of manual methods. An accurate and efficient automated system is needed to aid early stage diagnosis.</p>
+            </div>
+            <div class="content-card">
+                <h3>Research</h3>
+                <p>This study aims to compare the performance of LightGBM and Multilayer Perceptron (MLP) models in breast cancer classification to determine the best model in terms of accuracy, efficiency, and ease of implementation in an automatic diagnosis system.</p>
+            </div>
+        </div>
+
+        <div class="content-card" style="margin-top: 3rem">
+            <h3>Dataset Information</h3>
+            <p>The dataset used in this study is breast cancer data consisting of approximately 569 rows of data and 30 numeric features, plus 1 target column, namely diagnosis. The diagnosis column contains classification labels with two categories: M (Malignant) and B (Benign). Each row represents one patient, with features such as radius_mean, texture_mean, area_mean, and others that represent tumor cell characteristics. This dataset is in CSV format public data on Kaggle.</p>
+        </div>
+
+        <div class="content-grid">
+            <div class="content-card">
+                <h3>Model</h3>
+                <p>The model used in this project includes a supervised learning algorithm, MLP. After going through a comparison process, the model is trained to classify whether a sample is benign or malignant.</p>
+            </div>
+            <div class="content-card">
+                <h3>Accuracy Results</h3>
+                <p>The results of the comparison of the two models are, LightGBM without SMOTE + GridSearch reaches 93%, while MLP without SMOTE + GridSearch 96%. Then SMOTE and GridSearch hyperparameter tuning are performed, the LightGBM + SMOTE + GridSearch model produces 95%, while MLP + SMOTE + GridSearch 98%.</p>
+            </div>
+        </div>
+
+        <div class="content-card" style="margin-top: 3rem;">
+            <h3>Information About Data Input</h3>
+            <p>To obtain breast cancer prediction data, the first step that is commonly taken is a clinical examination, where the patient will undergo a physical examination by a doctor to detect lumps or other changes in the breast that could be an early sign of breast cancer.</p>
+        </div>
+    </div>
+
+    <!-- Page 3: Prediction Form -->
+    <div id="tools" class="page">
+        <div class="hero">
+            <h1>Breast Cancer <span class="highlight">Prediction</span></h1>
+            <p>Insert Medical Data from Digital Microscopy Analysis</p>
+        </div>
+
+        <div class="form-container">
+            <h2 style="text-align: center; margin-bottom: 2rem; color: #4fd1c7;">Patient Information Form</h2>
+            
+            <div class="info-box">
+                <h4>📏 Measurement Units Information</h4>
+                <p>All measurements in this form are based on <strong>pixel units from digital microscopy images</strong>. These values are extracted from digitized pathology slides and represent cellular and nuclear characteristics of tissue samples. You can use decimal values (e.g., 14.25, 0.088).</p>
+            </div>
+
+            <form id="predictionForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Average Distance from Center to Tumor Edge <span class="unit-label">(pixels)</span></label>
+                        <input type="text" inputmode="decimal" placeholder="e.g., 14.25" required data-field="radius_mean">
+                    </div>
+                    <div class="form-group">
+                        <label>Standard Error of Tumor Area <span class="unit-label">(pixels)</span></label>
+                        <input type="text" inputmode="decimal" placeholder="e.g., 0.45" required data-field="radius_se">
+                    </div>
+                    <div class="form-group">
+                        <label>Average Tumor Perimeter <span class="unit-label">(pixels)</span></label>
+                        <input type="text" inputmode="decimal" placeholder="e.g., 91.97" required data-field="perimeter_mean">
+                    </div>
+                    <div class="form-group">
+                        <label>Maximum Distance from Center to Edge <span class="unit-label">(pixels)</span></label>
+                        <input type="text" inputmode="decimal" placeholder="e.g., 16.84" required data-field="radius_worst">
+                    </div>
+                    <div class="form-group">
+                        <label>Average Tumor Area <span class="unit-label">(pixels²)</span></label>
+                        <input type="text" inputmode="decimal" placeholder="e.g., 654.89" required data-field="area_mean">
+                    </div>
+                    <div class="form-group">
+                        <label>Largest Tumor Perimeter <span class="unit-label">(pixels)</span></label>
+                        <input type="text" inputmode="decimal" placeholder="e.g., 115.65" required data-field="perimeter_worst">
+                    </div>
+                    <div class="form-group">
+                        <label>Average Concavity Depth <span class="unit-label">(normalized pixels)</span></label>
+                        <input type="text" inputmode="decimal" placeholder="e.g., 0.088" required data-field="concavity_mean">
+                    </div>
+                    <div class="form-group">
+                        <label>Largest Tumor Area <span class="unit-label">(pixels²)</span></label>
+                        <input type="text" inputmode="decimal" placeholder="e.g., 963.45" required data-field="area_worst">
+                    </div>
+                    <div class="form-group">
+                        <label>Average Number of Concave Points <span class="unit-label">(count/pixel)</span></label>
+                        <input type="text" inputmode="decimal" placeholder="e.g., 0.048" required data-field="concave_points_mean">
+                    </div>
+                    <div class="form-group">
+                        <label>Maximum Number of Concave Points <span class="unit-label">(count/pixel)</span></label>
+                        <input type="text" inputmode="decimal" placeholder="e.g., 0.162" required data-field="concave_points_worst">
+                    </div>
+                </div>
+
+                <div class="form-buttons">
+                    <button type="button" class="btn btn-secondary" onclick="resetForm()">Reset Form</button>
+                    <button type="submit" class="btn btn-primary">Predict</button>
+                </div>
+            </form>
+            
+            <div id="predictionResult" class="prediction-result">
+                <h3>🔬 Analysis Result:</h3>
+                <div id="predictionValue" class="prediction-value"></div>
+                <div id="confidenceText" class="confidence-text"></div>
+                <div class="disclaimer">
+                    <strong>⚠️ Important Disclaimer:</strong> This is a demonstration tool for educational purposes only. The system is designed to help support diagnostic decisions. All medical decisions should be made after consultation with a qualified healthcare professional.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showPage(pageId) {
+            // Hide all pages
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => page.classList.remove('active'));
+            
+            // Show selected page
+            document.getElementById(pageId).classList.add('active');
+        }
+
+        function resetForm() {
+            document.getElementById('predictionForm').reset();
+            document.getElementById('predictionResult').classList.remove('show');
+            
+            // Reset all input styles
+            document.querySelectorAll('input').forEach(input => {
+                input.classList.remove('valid', 'invalid');
+            });
+        }
+
+        // Improved decimal input validation
+        function validateDecimalInput(input) {
+            let value = input.value;
+            
+            // Allow numbers, one decimal point, and minus sign
+            value = value.replace(/[^0-9.-]/g, '');
+            
+            // Allow only one decimal point
+            const decimalCount = (value.match(/\./g) || []).length;
+            if (decimalCount > 1) {
+                value = value.substring(0, value.lastIndexOf('.'));
+            }
+            
+            // Allow only one minus sign at the beginning
+            const minusCount = (value.match(/-/g) || []).length;
+            if (minusCount > 1 || (value.indexOf('-') > 0)) {
+                value = value.replace(/-/g, '');
+            }
+            
+            input.value = value;
+            
+            // Visual validation feedback
+            const numValue = parseFloat(value);
+            if (value && !isNaN(numValue) && numValue >= 0) {
+                input.classList.remove('invalid');
+                input.classList.add('valid');
+                return true;
+            } else {
+                input.classList.remove('valid');
+                input.classList.add('invalid');
+                return false;
+            }
+        }
+
+        // Handle form submission
+        document.getElementById('predictionForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get all inputs
+            const inputs = this.querySelectorAll('input');
+            const values = [];
+            let allValid = true;
+            
+            // Validate all inputs
+            inputs.forEach(input => {
+                const isValid = validateDecimalInput(input);
+                const numValue = parseFloat(input.value);
+                
+                if (!isValid || isNaN(numValue) || numValue < 0) {
+                    allValid = false;
+                } else {
+                    values.push(numValue);
+                }
+            });
+            
+            if (!allValid) {
+                alert('Please fill in all fields with valid positive decimal numbers (e.g., 14.25, 0.088).');
+                return;
+            }
+            
+            // Add loading animation
+            const submitBtn = this.querySelector('.btn-primary');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Analyzing...';
+            submitBtn.disabled = true;
+            
+            // Simulate ML model processing time
+            setTimeout(() => {
+                // Simulate prediction (in real implementation, this would call your ML model)
+                const prediction = Math.random() > 0.4 ? 'BENIGN' : 'MALIGNANT';
+                const confidence = (Math.random() * 20 + 75).toFixed(1);
+                
+                // Show prediction result
+                const resultDiv = document.getElementById('predictionResult');
+                const valueDiv = document.getElementById('predictionValue');
+                const confidenceDiv = document.getElementById('confidenceText');
+                
+                valueDiv.textContent = prediction;
+                valueDiv.className = `prediction-value ${prediction.toLowerCase()}`;
+                confidenceDiv.textContent = `Model Confidence: ${confidence}%`;
+                
+                resultDiv.classList.add('show');
+                
+                // Restore button
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+                
+                // Scroll to result
+                resultDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 2000);
+        });
+
+        // Add event listeners for real-time validation
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add input validation to all number inputs
+            document.querySelectorAll('input[type="text"]').forEach(input => {
+                input.addEventListener('input', function() {
+                    validateDecimalInput(this);
+                });
+                
+                input.addEventListener('keypress', function(e) {
+                    // Allow: backspace, delete, tab, escape, enter, period, minus
+                    if ([46, 8, 9, 27, 13, 110, 190, 189].indexOf(e.keyCode) !== -1 ||
+                        // Allow: Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
+                        (e.keyCode === 65 && e.ctrlKey === true) ||
+                        (e.keyCode === 67 && e.ctrlKey === true) ||
+                        (e.keyCode === 86 && e.ctrlKey === true) ||
+                        (e.keyCode === 88 && e.ctrlKey === true) ||
+                        // Allow: home, end, left, right
+                        (e.keyCode >= 35 && e.keyCode <= 39)) {
+                        return;
+                    }
+                    // Ensure that it is a number and stop the keypress
+                    if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+                        e.preventDefault();
+                    }
+                });
+                
+                input.addEventListener('paste', function(e) {
+                    // Allow paste and then validate
+                    setTimeout(() => {
+                        validateDecimalInput(this);
+                    }, 10);
+                });
+            });
+            
+            // Animate cards on page load
+            const cards = document.querySelectorAll('.feature-card, .content-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    card.style.transition = 'all 0.6s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+</html>
